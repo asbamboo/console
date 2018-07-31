@@ -25,7 +25,7 @@ class Lists
         $commands   = $CommandCollection->getIterator();
 
         foreach($commands AS $name => $command){
-            echo $name, "\r\n";
+            echo $name, "　", $CommandCollection->helper($name), "\r\n";
         }
     }
 }

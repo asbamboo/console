@@ -13,15 +13,24 @@ class CommandCollection implements CommandCollectionInterface
      * @var array
      */
     private $commands   = [];
+    
+    /**
+     * 帮助信息 key 和 $commands保持一致
+     * 
+     * @var array
+     */
+    private $helpers    = [];
 
     /**
      *
      * {@inheritDoc}
      * @see \asbamboo\console\CommandCollectionInterface::add()
      */
-    public function add(string $name, callable $callable) : CommandCollectionInterface
+    public function add(string $name, callable $callable, string $helper = null) : CommandCollectionInterface
     {
         $this->commands[$name]  = $callable;
+        
+        $this->helpers[$name]   = $helper;
 
         return $this;
     }
@@ -38,7 +47,15 @@ class CommandCollection implements CommandCollectionInterface
         }
         //@TODO exception;
     }
-
+    
+    public function helper(string $name): ?string
+    {
+        if($this->has($name)){
+            return $this->helpers[$name];
+        }
+        return null;
+    }
+    
     /**
      *
      * {@inheritDoc}
