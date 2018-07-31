@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+use asbamboo\console\Processor;
+
+require dirname(dirname(dirname(dirname(__DIR__)))) . '/test/bootstrap.php';
+
+$Processor  = new Processor();
+$Processor->exec();
