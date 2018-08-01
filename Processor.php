@@ -37,7 +37,11 @@ class Processor implements ProcessorInterface
     public function exec()
     {
         $command    = $this->findCommand();
-        $args       = array_slice($_SERVER['argv'], 2);
+        if(is_array($command) && $command[0] instanceof Lists && $command[1] == 'exec'){
+            $args       = [$this->Finder->getCommandCollection()];
+        }else{
+            $args       = array_slice($_SERVER['argv'], 2);
+        }
         return call_user_func_array($command, $args);
     }
 
@@ -47,11 +51,7 @@ class Processor implements ProcessorInterface
      */
     private function findCommand() : callable
     {
-        if(isset( $_SERVER['argv'][1] )){
-            $name   = $_SERVER['argv'][1];
-            return $this->Finder->find($name);
-        }
-
-        return [new Lists(), 'exec'];
+        $name   = $_SERVER['argv'][1] ?? Constant::ASBAMBOO_CONSOLE_LISTS;
+        return $this->Finder->find($name);
     }
 }

@@ -3,6 +3,7 @@ namespace asbamboo\framework\_test\console;
 
 use PHPUnit\Framework\TestCase;
 use asbamboo\console\Processor;
+use asbamboo\console\Constant;
 
 /**
  *
@@ -17,6 +18,11 @@ class ProcessorTest extends TestCase
     public function testExec()
     {
         $Processor  = new Processor();
+        ob_start();
         $Processor->exec();
+        $content    = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertContains(Constant::ASBAMBOO_CONSOLE_LISTS, $content);
     }
 }

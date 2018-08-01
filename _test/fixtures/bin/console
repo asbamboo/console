@@ -1,8 +1,19 @@
 #!/usr/bin/env php
 <?php
+
+use asbamboo\console\CommandCollection;
+use asbamboo\console\Finder;
 use asbamboo\console\Processor;
 
 require dirname(dirname(dirname(dirname(__DIR__)))) . '/test/bootstrap.php';
 
-$Processor  = new Processor();
+function test_command($test=0, $v=5){
+    echo $test, $v; 
+    return 1;
+};
+
+$CommandCollection  = new CommandCollection();
+$CommandCollection->add('test', 'test_command', '测试', '控制台测试');
+$Finder     = new Finder($CommandCollection);
+$Processor  = new Processor($Finder);
 $Processor->exec();

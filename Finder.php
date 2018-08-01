@@ -35,4 +35,14 @@ class Finder implements FinderInterface
     {
         return $this->CommandCollection->get($name);
     }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \asbamboo\console\FinderInterface::getCommandCollection()
+     */
+    public function getCommandCollection() : CommandCollectionInterface
+    {
+        return $this->CommandCollection;
+    }
 }

@@ -16,4 +16,11 @@ interface FinderInterface
      * @return callable
      */
     public function find(string $name) : callable;
+
+    /**
+     * 获取命令集合
+     *
+     * @return CommandCollectionInterface
+     */
+    public function getCommandCollection() : CommandCollectionInterface;
 }
