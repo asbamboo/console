@@ -1,6 +1,8 @@
 <?php
 namespace asbamboo\console;
 
+use asbamboo\console\command\CommandInterface;
+
 /**
  * 通过本接口实现的实例查找控制台命令对应的命令行回调程序
  *
@@ -13,9 +15,9 @@ interface FinderInterface
      * 查找控制台命令对应的命令行回调程序
      *
      * @param string $name
-     * @return callable
+     * @return CommandInterface
      */
-    public function find(string $name) : callable;
+    public function find(string $name) : CommandInterface;
 
     /**
      * 获取命令集合

@@ -1,6 +1,8 @@
 <?php
 namespace asbamboo\console;
 
+use asbamboo\console\command\CommandInterface;
+
 /**
  *
  * @author 李春寅 <licy2013@aliyun.com>
@@ -31,7 +33,7 @@ class Finder implements FinderInterface
      * {@inheritDoc}
      * @see \asbamboo\console\FinderInterface::find()
      */
-    public function find(string $name) : callable
+    public function find(string $name) : CommandInterface
     {
         return $this->CommandCollection->get($name);
     }

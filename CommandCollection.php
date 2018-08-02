@@ -1,7 +1,10 @@
 <?php
 namespace asbamboo\console;
 
-use asbamboo\console\command\Lists;
+use asbamboo\console\Exception\ConsoleNotFoundCommandException;
+use asbamboo\console\command\CommandInterface;
+use asbamboo\console\command\ListsCommand;
+use asbamboo\console\command\HelpCommand;
 
 /**
  *
@@ -17,13 +20,6 @@ class CommandCollection implements CommandCollectionInterface
     private $commands   = [];
 
     /**
-     * 简要描述  key 和 $commands保持一致
-     *
-     * @var array
-     */
-    private $descriptions   = [];
-
-    /**
      *
      */
     public function __construct()
@@ -31,7 +27,8 @@ class CommandCollection implements CommandCollectionInterface
         /*
          * 默认的内置命令行程序
          */
-        $this->add(Constant::ASBAMBOO_CONSOLE_LISTS, Lists::class.':exec', '列出所有命令行');
+        $this->add(Constant::ASBAMBOO_CONSOLE_LISTS, ListsCommand::class);
+        $this->add(Constant::ASBAMBOO_CONSOLE_HELP, HelpCommand::class);
     }
 
     /**
@@ -39,10 +36,9 @@ class CommandCollection implements CommandCollectionInterface
      * {@inheritDoc}
      * @see \asbamboo\console\CommandCollectionInterface::add()
      */
-    public function add(string $name, /*callable|class:method*/ $callable, string $descriptions = null) : CommandCollectionInterface
+    public function add(string $name, /*CommandInterface|string*/ $Command) : CommandCollectionInterface
     {
-        $this->commands[$name]      = $callable;
-        $this->descriptions[$name]  = $descriptions;
+        $this->commands[$name]      = $Command;
 
         return $this;
     }
@@ -52,26 +48,16 @@ class CommandCollection implements CommandCollectionInterface
      * {@inheritDoc}
      * @see \asbamboo\console\CommandCollectionInterface::get()
      */
-    public function get(string $name) : callable
+    public function get(string $name) : CommandInterface
     {
         if($this->has($name)){
-            $command    = $this->commands[$name];
-            return CommandBuilder::instance()->build($command);
+            $Command    = $this->commands[$name];
+            if(is_string( $Command ) && class_exists($Command)){
+                $Command    = new $Command;
+            }
+            return $Command;
         }
-        //@TODO exception;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \asbamboo\console\CommandCollectionInterface::description()
-     */
-    public function description($name) : ?string
-    {
-        if($this->has($name)){
-            return $this->descriptions[$name];
-        }
-        return null;
+        throw new ConsoleNotFoundCommandException(sprintf('命令行程序没有找到：%s', $name));
     }
 
     /**
@@ -91,6 +77,12 @@ class CommandCollection implements CommandCollectionInterface
      */
     public function getIterator()
     {
+        foreach($this->commands AS $name => $Command)
+        {
+            if(is_string($Command)){
+                $this->commands[$name]  = $this->get($name);
+            }
+        }
         return new \ArrayIterator($this->commands);
     }
 }

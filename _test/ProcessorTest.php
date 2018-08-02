@@ -1,5 +1,5 @@
 <?php
-namespace asbamboo\framework\_test\console;
+namespace asbamboo\framework\console\_test;
 
 use PHPUnit\Framework\TestCase;
 use asbamboo\console\Processor;

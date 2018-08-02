@@ -13,4 +13,5 @@ final class Constant
      * 内置命令行程序名称
      */
     const ASBAMBOO_CONSOLE_LISTS    = 'asbamboo:console:lists';
+    const ASBAMBOO_CONSOLE_HELP     = 'asbamboo:console:help';
 }
