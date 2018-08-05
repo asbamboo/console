@@ -9,23 +9,33 @@ namespace asbamboo\console;
 class Input implements InputInterface
 {
     /**
-     *
+     * 所有从控制台获取的参数
      */
     private $server_args;
-
+  
     /**
+     * 需要执行的命令名称
      *
      * @var string
      */
     private $command_name;
 
     /**
+     * 选项信息
      *
      * @var array
      */
     private $options;
 
     /**
+     * 简短选项信息
+     *
+     * @var array
+     */
+    private $short_options;
+    
+    /**
+     * 参数信息
      *
      * @var array
      */
@@ -39,7 +49,7 @@ class Input implements InputInterface
         if(is_null($server_args)){
             $this->server_args  = $_SERVER['argv'];
         }
-        $this->server_args  = $server_args?:[];
+        $this->server_args  = $this->server_args?:$server_args;
         $this->parseArgv();
     }
 
@@ -71,7 +81,7 @@ class Input implements InputInterface
      */
     public function commandName() : string
     {
-        return $this->command_name;
+        return $this->command_name ?? Constant::ASBAMBOO_CONSOLE_LISTS;
     }
 
     /**
@@ -93,20 +103,51 @@ class Input implements InputInterface
     {
         return $this->options;
     }
+    
+    /**
+     * 
+     * {@inheritDoc}
+     * @see \asbamboo\console\InputInterface::shortOptions()
+     */
+    public function shortOptions() : ?array
+    {
+        return $this->short_options;
+    }
 
     /**
      * 解析控制台传入的参数信息
      */
     private function parseArgv() : void
     {
-        foreach( $this->server_args AS $arg ){
-            if(strncmp('-', $arg, 1) === 0){
-                $this->options[]        = $arg;
+        if(is_null($this->server_args)){
+            return;
+        }
+        
+        foreach( $this->server_args AS $index => $arg ){
+            if($index == 0){
+                continue;
+            }
+            if(strncmp('--', $arg, 2) === 0){
+                $options                = explode('=', $arg, 2);
+                $name                   = ltrim($options[0], '-');
+                $value                  = $options[1] ?? true;
+                $this->options[$name]   = $value;
+                if(in_array($name, ['help','h'])){
+                    $this->command_name = Constant::ASBAMBOO_CONSOLE_HELP;
+                }
+            }else if(strncmp('-', $arg, 1) === 0){
+                $options                = explode('=', $arg, 2);
+                $name                   = ltrim($options[0], '-');
+                $value                  = $options[1] ?? true;
+                $this->short_options[$name]   = $value;
+                if(in_array($name, ['help','h'])){
+                    $this->command_name = Constant::ASBAMBOO_CONSOLE_HELP;
+                }
             }else if(empty( $this->command_name )){
                 $this->command_name     = $arg;
             }else{
                 $this->arguments[]    = $arg;
             }
-        }
+        }        
     }
 }

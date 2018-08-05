@@ -1,8 +1,8 @@
 <?php
 namespace asbamboo\console\command;
 
-use asbamboo\console\CommandCollectionInterface;
-use asbamboo\console\CommandCollection;
+use asbamboo\console\ProcessorInterface;
+use asbamboo\console\Constant;
 
 /**
  * 列出所有命令行程序
@@ -13,15 +13,20 @@ use asbamboo\console\CommandCollection;
 class ListsCommand extends CommandAbstract
 {
     /**
-     *
-     * @param CommandCollectionInterface $CommandCollection
+     * 
+     * {@inheritDoc}
+     * @see \asbamboo\console\command\CommandInterface::exec()
      */
-    public function exec(CommandCollectionInterface $CommandCollection = null) : void
+    public function exec(ProcessorInterface $Processor)
     {
-        if(is_null($CommandCollection)){
-            $CommandCollection  = new CommandCollection();
-        }
-        $Commands           = $CommandCollection->getIterator();
+        /**
+         * 
+         * @var \asbamboo\console\CommandCollectionInterface $Commands
+         * @var \asbamboo\console\OutputInterface $Output
+         */
+        $Commands           = $Processor->commandCollection();
+        $Output             = $Processor->output();
+        
         $name_max_length    = 0;
         foreach($Commands AS $name => $Command){
             $name_length    = strlen($name);
@@ -30,7 +35,7 @@ class ListsCommand extends CommandAbstract
             }
         }
         foreach($Commands AS $name => $Command){
-            echo str_pad($name, $name_max_length + 1, ' ', STR_PAD_RIGHT), $Command->desc(), "\r\n";
+            $Output->print(str_pad($name, $name_max_length + 1, ' ', STR_PAD_RIGHT), $Command->desc(), "\r\n");
         }
     }
 
@@ -50,7 +55,13 @@ class ListsCommand extends CommandAbstract
      * @see \asbamboo\console\command\CommandInterface::help()
      */
     public function help() : string
-    {
-        return '';
-    }
+    {        
+        $console    = $_SERVER['SCRIPT_FILENAME'];
+        $list       = Constant::ASBAMBOO_CONSOLE_LISTS;
+    
+        return <<<HELP
+    例: php {$console} {$list}
+
+HELP;
+}
 }

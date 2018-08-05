@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 use asbamboo\console\command\CommandOptionCollection;
 use asbamboo\console\command\CommandOption;
 use asbamboo\console\command\CommandOptionInterface;
+use asbamboo\console\command\CommandOptionCollectionInterface;
 
 /**
  *
@@ -27,12 +28,21 @@ class CommandOptionCollectionTest extends TestCase
         $this->assertInstanceOf(CommandOptionCollection::class, $CommandOptionCollection);
         return $CommandOptionCollection;
     }
+    
+    /**
+     * @depends testAppend
+     */
+    public function testGet(CommandOptionCollectionInterface $CommandOptionCollection)
+    {
+        $this->assertInstanceOf(CommandOptionInterface::class, $CommandOptionCollection->get('test1'));
+    }
 
     /**
      * @depends testAppend
      */
     public function testMain($CommandOptionCollection)
     {
+        $this->assertEquals(2, count($CommandOptionCollection));
         foreach($CommandOptionCollection AS $CommandOption){
             $this->assertInstanceOf(CommandOptionInterface::class, $CommandOption);
         }

@@ -13,26 +13,26 @@ class InputTest extends TestCase
 {
     public function testPrompt()
     {
-        $input  = new input(['command_name', '--test', 'arg']);
+        $input  = new input(['console', 'command_name', '--test', 'arg']);
         $a      = $input->prompt('测试一下输入：');
         $this->assertTrue(is_string($a));
     }
 
     public function testCommandName()
     {
-        $input  = new input(['command_name', '--test', 'arg']);
+        $input  = new input(['console', 'command_name', '--test', 'arg']);
         $this->assertEquals('command_name', $input->commandName());
     }
 
     public function testArguments()
     {
-        $input  = new input(['command_name', '--test', 'arg']);
+        $input  = new input(['console', 'command_name', '--test', 'arg']);
         $this->assertEquals(['arg'], $input->arguments());
     }
 
     public function testOptions()
     {
-        $input  = new input(['command_name', '--test', 'arg']);
-        $this->assertEquals(['--test'], $input->options());
+        $input  = new input(['console', 'command_name', '--test', 'arg']);
+        $this->assertEquals(['test'=>true], $input->options());
     }
 }

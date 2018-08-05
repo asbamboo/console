@@ -44,7 +44,16 @@ interface InputInterface
      *      ”--help|-h“ 这个是特殊的选项。等同于执行系统自带的help命令程序
      *      ”--test“ 如果选项没有符号”=“, 那么等同于--test=true
      *
-     * @return array
+     * @return array|NULL
      */
     public function options() : ?array;
+    
+    /**
+     * 获取命令行程序的简称选项信息
+     *  - 简称 如 self::shortOptions()的h 是 self::options()的help的简称
+     *  - 执行命令的时候带上--help 或者 -h都可以。 
+     * 
+     * @return array|NULL
+     */
+    public function shortOptions() : ?array;
 }

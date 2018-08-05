@@ -1,9 +1,8 @@
 <?php
 namespace asbamboo\console;
 
-use asbamboo\console\command\ListsCommand;
 use asbamboo\console\command\CommandInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use asbamboo\event\EventScheduler;
 
 /**
  * 控制台处理程序
@@ -19,26 +18,37 @@ class Processor implements ProcessorInterface
      */
     private $Finder;
 
+    /**
+     * 
+     * @var InputInterface
+     */
     private $Input;
 
+    /**
+     * 
+     * @var OutputInterface
+     */
     private $Output;
 
     /**
      *
-     * @param FinderInterface $finder
+     * @param FinderInterface $Finder
      */
-    public function __construct(FinderInterface $finder = null, InputInterface $Input = null, OutputInterface $Output = null)
+    public function __construct(FinderInterface $Finder = null, InputInterface $Input = null, OutputInterface $Output = null)
     {
-        if(is_null($finder)){
-            $finder = new Finder();
+        if(is_null($Finder)){
+            $Finder = new Finder();
         }
-        $this->Finder   = $finder;
+        $this->Finder   = $Finder;
 
         if(is_null($Input)){
             $Input      = new Input();
         }
         $this->Input    = $Input;
 
+        if(is_null($Output)){
+            $Output     = new Output(); 
+        }
         $this->Output   = $Output;
     }
 
@@ -50,12 +60,10 @@ class Processor implements ProcessorInterface
     public function exec()
     {
         $Command    = $this->findCommand();
-        if($Command instanceof ListsCommand){
-            $args       = [$this->Finder->getCommandCollection()];
-        }else{
-            $args       = array_slice($_SERVER['argv'], 2);
-        }
-        return call_user_func_array([$Command, 'exec'], $args);
+        
+        EventScheduler::instance()->on(Event::ASBAMBOO_CONSOLE_PRE_EXEC, $this);
+        
+        return call_user_func_array([$Command, 'exec'], [$this]);
     }
 
     /**
@@ -94,7 +102,7 @@ class Processor implements ProcessorInterface
      */
     private function findCommand() : CommandInterface
     {
-        $name   = $_SERVER['argv'][1] ?? Constant::ASBAMBOO_CONSOLE_LISTS;
+        $name   = $this->input()->commandName();
         return $this->Finder->find($name);
     }
 }

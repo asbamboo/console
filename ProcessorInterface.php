@@ -1,8 +1,6 @@
 <?php
 namespace asbamboo\console;
 
-use Symfony\Component\Console\Output\OutputInterface;
-
 /**
  * 控制台处理程序
  *
