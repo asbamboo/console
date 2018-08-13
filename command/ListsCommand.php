@@ -63,5 +63,5 @@ class ListsCommand extends CommandAbstract
     例: php {$console} {$list}
 
 HELP;
-}
+    }
 }

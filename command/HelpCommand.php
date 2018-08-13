@@ -3,7 +3,6 @@ namespace asbamboo\console\command;
 
 use asbamboo\console\ProcessorInterface;
 use asbamboo\console\Constant;
-use phpDocumentor\Reflection\DocBlock\Description;
 
 /**
  * 通过命令行程序名称，获取命令行程序的帮助信息
