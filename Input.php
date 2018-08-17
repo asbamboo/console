@@ -133,6 +133,7 @@ class Input implements InputInterface
                 $this->options[$name]   = $value;
                 if(in_array($name, ['help','h'])){
                     if(!empty($this->command_name)){
+                        $this->arguments    = (array) $this->arguments;
                         array_unshift($this->arguments, $this->command_name);
                     }
                     $this->command_name = Constant::ASBAMBOO_CONSOLE_HELP;
@@ -144,6 +145,7 @@ class Input implements InputInterface
                 $this->short_options[$name]   = $value;
                 if(in_array($name, ['help','h'])){
                     if(!empty($this->command_name)){
+                        $this->arguments    = (array) $this->arguments;
                         array_unshift($this->arguments, $this->command_name);
                     }
                     $this->command_name = Constant::ASBAMBOO_CONSOLE_HELP;
