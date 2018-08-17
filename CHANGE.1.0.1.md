@@ -1,0 +1,1 @@
+#. 修复bug[help命令总是显示asbamboo:console:lists命令的相关帮助]

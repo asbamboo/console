@@ -122,7 +122,6 @@ class Input implements InputInterface
         if(is_null($this->server_args)){
             return;
         }
-        
         foreach( $this->server_args AS $index => $arg ){
             if($index == 0){
                 continue;
@@ -133,6 +132,9 @@ class Input implements InputInterface
                 $value                  = $options[1] ?? true;
                 $this->options[$name]   = $value;
                 if(in_array($name, ['help','h'])){
+                    if(!empty($this->command_name)){
+                        array_unshift($this->arguments, $this->command_name);
+                    }
                     $this->command_name = Constant::ASBAMBOO_CONSOLE_HELP;
                 }
             }else if(strncmp('-', $arg, 1) === 0){
@@ -141,6 +143,9 @@ class Input implements InputInterface
                 $value                  = $options[1] ?? true;
                 $this->short_options[$name]   = $value;
                 if(in_array($name, ['help','h'])){
+                    if(!empty($this->command_name)){
+                        array_unshift($this->arguments, $this->command_name);
+                    }
                     $this->command_name = Constant::ASBAMBOO_CONSOLE_HELP;
                 }
             }else if(empty( $this->command_name )){

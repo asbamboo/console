@@ -63,7 +63,11 @@ class Processor implements ProcessorInterface
         
         EventScheduler::instance()->on(Event::ASBAMBOO_CONSOLE_PRE_EXEC, $this);
         
-        return call_user_func_array([$Command, 'exec'], [$this]);
+        $result = call_user_func_array([$Command, 'exec'], [$this]);
+        
+        $this->Output->print("\r\n");
+        
+        return $result;
     }
 
     /**
